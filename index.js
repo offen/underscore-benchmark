@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 const url = require('url')
+const _ = require('underscore')
 const benchmark = require('benchmark')
 const proxyquire = require('proxyquire').noPreserveCache().noCallThru()
 
 const events = require('./fixtures/events').map(validateAndParseEvent)
+const chunked = _.partition(events, function (el, index) { return index % 2 })
 
 const master = proxyquire('./src/stats', {
   underscore: require('underscore-master')
@@ -21,7 +23,7 @@ suite
   .add('master (c9b4b63fd08847281260205b995ae644f6f2f4d2)', {
     defer: true,
     fn: function (deferred) {
-      run(events, master)
+      run(events, chunked, master)
         .then(function () {
           deferred.resolve()
         }, function (err) {
@@ -33,7 +35,7 @@ suite
   .add('functional style (eaba5b58fa8fd788a5be1cf3b66e81f8293f70f9)', {
     defer: true,
     fn: function (deferred) {
-      run(events, functionalStyle)
+      run(events, chunked, functionalStyle)
         .then(function () {
           deferred.resolve()
         }, function (err) {

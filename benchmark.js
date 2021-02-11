@@ -1,4 +1,4 @@
-module.exports = function (events, stats) {
+module.exports = function (events, chunked, stats) {
   return Promise.all([
     stats.bounceRate(events),
     stats.referrers(events),
@@ -11,8 +11,8 @@ module.exports = function (events, stats) {
     stats.exitPages(events),
     stats.landingPages(events),
     stats.mobileShare(events),
-    stats.returningUsers(events, events),
-    stats.retention(events, events, events),
+    stats.returningUsers(...chunked),
+    stats.retention(...chunked),
     stats.pageviews(events),
     stats.visitors(events),
     stats.accounts(events),
