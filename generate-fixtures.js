@@ -22,6 +22,11 @@ if (!outfile) {
   process.exit(1)
 }
 
+if (fs.existsSync(outfile)) {
+  console.log('outfile already exists, skipping fixture generation')
+  process.exit(0)
+}
+
 const accountId = uuid.v4()
 
 console.log('Now creating some fixture data. This might take a little while.')

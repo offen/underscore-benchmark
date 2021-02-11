@@ -4,7 +4,7 @@
   "description": "Benchmarking stats calculation against different underscore versions",
   "main": "index.js",
   "scripts": {
-    "pretest": "./generate-fixtures.js 25000 ./fixtures/events.json",
+    "pretest": "./generate-fixtures.js 2500 ./fixtures/events.json",
     "test": "./index.js"
   },
   "repository": {
