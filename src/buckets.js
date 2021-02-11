@@ -3,9 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-var _ = require('underscore')
-
-module.exports = _.memoize(mapToBuckets)
+module.exports = mapToBuckets
 
 var buckets = [
   {
@@ -70,9 +68,11 @@ var buckets = [
   }
 ]
 
-function mapToBuckets (referrerValue) {
-  var bucket = _.find(buckets, function (b) {
-    return b.re.test(referrerValue)
+function mapToBuckets (_) {
+  return _.memoize(function (referrerValue) {
+    var bucket = _.find(buckets, function (b) {
+      return b.re.test(referrerValue)
+    })
+    return (bucket && bucket.name) || referrerValue
   })
-  return (bucket && bucket.name) || referrerValue
 }

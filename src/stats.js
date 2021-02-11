@@ -14,7 +14,7 @@
 
 var _ = require('underscore')
 
-var placeInBucket = require('./buckets')
+var placeInBucket = require('./buckets')(_)
 
 var propertyAccessors = {
   sessionId: _.property(['payload', 'sessionId']),
