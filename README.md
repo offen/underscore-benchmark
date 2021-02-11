@@ -1,5 +1,5 @@
 # underscore-benchmark
-Benchmarking stats calculation against different underscore versions
+Benchmarking stats calculation from [offen/offen](https://github.com/offen/offen) against different underscore versions.
 
 ## Set up
 
