@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 const benchmark = require('benchmark')
 const proxyquire = require('proxyquire').noPreserveCache().noCallThru()
 

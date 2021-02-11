@@ -1,7 +1,5 @@
+const events = require('./fixtures/events')
+
 module.exports = function (stats) {
-  return stats.bounceRate([
-    { payload: { sessionId: 'session-a' } },
-    { payload: { sessionId: 'session-b' } },
-    { payload: { sessionId: 'session-c' } }
-  ])
+  return stats.bounceRate(events)
 }
