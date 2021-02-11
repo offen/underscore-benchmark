@@ -6,10 +6,10 @@ const npm = proxyquire('./src/stats', {
   underscore: require('underscore')
 })
 const master = proxyquire('./src/stats', {
-  underscore: require('./vendor/underscore-c9b4b63fd08847281260205b995ae644f6f2f4d2')
+  underscore: require('underscore-master')
 })
 const functionalStyle = proxyquire('./src/stats', {
-  underscore: require('./vendor/underscore-eaba5b58fa8fd788a5be1cf3b66e81f8293f70f9')
+  underscore: require('underscore-functional')
 })
 
 const run = require('./benchmark')
