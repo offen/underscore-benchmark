@@ -4,7 +4,11 @@
  */
 
 // This files contains the stats functions as per offen/offen#3ccbccbb97f528e85f134164b691300189933855
-
+// In order to require as little changes to the original code as possible,
+// the entire module is wrapped in a function that injects the underscore version
+// to use and redeclares `exports`
+module.exports = function (_) {
+var exports = {}
 // All functions in this module are written with the expectation of given
 // events conforming to the schemas defined in event.schema and payload.schema,
 // meaning there is no need to perform safety checks for the existence of props
@@ -12,7 +16,11 @@
 // matters as these functions can process a lot of events in certain cases
 // so any check can have a real world performance impact.
 
+
+/*
+For the benchmark, we use the injected version of underscore instead.
 var _ = require('underscore')
+*/
 
 var placeInBucket = require('./buckets')(_)
 
@@ -471,4 +479,10 @@ function consumeAsync (fn, ctx) {
 
 function pairToRow (pair) {
   return { key: pair[0], count: pair[1] }
+}
+
+/*
+appended to end the underscore injection wrapper
+*/
+return exports
 }

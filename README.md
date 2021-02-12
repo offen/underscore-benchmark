@@ -12,13 +12,23 @@ npm install
 npm run setup
 ```
 
-Once this has finished, you are ready to run the benchmark:
+Once this has finished, you are ready to run the benchmark in Node.js:
 
 ```
 npm test
 ```
 
-If used with defaults, this will use commit [c9b4b63fd08847281260205b995ae644f6f2f4d2][baseline] as the __baseline__ and [eaba5b58fa8fd788a5be1cf3b66e81f8293f70f9][comparison] as the __comparison__ for the benchmark.
+You can also run the benchmark in a browser:
+
+```
+npm start
+```
+
+`budo` will start a local server at port 9966: loading this URL in a browser will run the benchmark. Results will be printed to your browser's console.
+
+---
+
+If used with defaults, the benchmark will use commit [c9b4b63fd08847281260205b995ae644f6f2f4d2][baseline] as the __baseline__ and [eaba5b58fa8fd788a5be1cf3b66e81f8293f70f9][comparison] as the __comparison__ for the benchmark.
 
 [baseline]: https://github.com/jashkenas/underscore/blob/c9b4b63fd08847281260205b995ae644f6f2f4d2/underscore.js
 [comparison]: https://github.com/jashkenas/underscore/blob/eaba5b58fa8fd788a5be1cf3b66e81f8293f70f9/underscore.js
