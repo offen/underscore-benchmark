@@ -12,7 +12,8 @@
     "pull-versions": "./pull.sh $npm_package_config_baseline_ref $npm_package_config_comparison_ref",
     "setup": "npm run pull-versions && npm run generate-fixtures",
     "postsetup": "echo 'You can now use `npm t` to run the benchmark.'",
-    "test": "./index.js"
+    "test": "./index.js",
+    "start": "budo ./index.js"
   },
   "repository": {
     "type": "git",
@@ -26,8 +27,8 @@
   "homepage": "https://github.com/offen/underscore-benchmark#readme",
   "dependencies": {
     "benchmark": "^2.1.4",
+    "budo": "^11.6.4",
     "microtime": "^3.0.0",
-    "proxyquire": "^2.1.3",
     "ulid": "^2.3.0",
     "underscore": "^1.12.0",
     "uuid": "^8.3.2"
