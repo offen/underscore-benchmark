@@ -20,10 +20,7 @@ require('url-polyfill')
 // N.B.: this usage of underscore is not relevant to the benchmark, so
 // we just consume the version from npm.
 var chunked = _.partition(events, function (el, index) { return index % 2 })
-
-// Browser detection and support
-var isBrowser = typeof window != 'undefined';
-var consoleMessages = [];
+var logger = new Logger(typeof window !== 'undefined')
 
 var suite = new benchmark.Suite()
 
@@ -53,21 +50,15 @@ suite
     }
   })
   .on('start', function () {
-    var message = `Now running bechmark with "baseline (${baselineRef.ref})" and "comparison (${comparisonRef.ref})"`;
-    isBrowser ? document.write(message) : console.log(message);
+    logger.log(
+      `Now running bechmark with "baseline (${baselineRef.ref})" and "comparison (${comparisonRef.ref})"`
+    ).flush()
   })
   .on('cycle', function (event) {
-    var message = String(event.target);
-    isBrowser ? consoleMessages.push(message) : console.log(message);
+    logger.log(String(event.target))
   })
   .on('complete', function () {
-    var message = 'Fastest is ' + this.filter('fastest').map('name');
-    if (isBrowser) {
-      consoleMessages.push(message);
-      document.write(consoleMessages.join('<br>'));
-    } else {
-      console.log(message);
-    }
+    logger.log('Fastest is ' + this.filter('fastest').map('name')).flush()
   })
   .run()
 
@@ -84,4 +75,25 @@ function normalizeURL (urlString) {
     u.pathname += '/'
   }
   return u
+}
+
+function Logger (isBrowser) {
+  var messages = []
+  this.log = function (message) {
+    if (!isBrowser) {
+      console.log(message)
+      return this
+    }
+    messages.push(message)
+    return this
+  }
+
+  this.flush = function () {
+    if (!isBrowser) {
+      return this
+    }
+    document.write(messages.join('<br>'))
+    messages = []
+    return this
+  }
 }
