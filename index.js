@@ -8,9 +8,11 @@ const proxyquire = require('proxyquire').noPreserveCache().noCallThru()
 const events = require('./fixtures/events').map(validateAndParseEvent)
 const chunked = _.partition(events, function (el, index) { return index % 2 })
 
+const baselineRef = require('./vendor/underscore-baseline.ref')
 const baseline_ = proxyquire('./src/stats', {
   underscore: require('./vendor/underscore-baseline')
 })
+const comparisonRef = require('./vendor/underscore-comparison.ref')
 const comparison_ = proxyquire('./src/stats', {
   underscore: require('./vendor/underscore-comparison')
 })
@@ -20,7 +22,7 @@ const run = require('./benchmark')
 const suite = new benchmark.Suite()
 
 suite
-  .add('baseline', {
+  .add(`baseline (${baselineRef.ref})`, {
     defer: true,
     fn: function (deferred) {
       run(events, chunked, baseline_)
@@ -32,7 +34,7 @@ suite
         })
     }
   })
-  .add('comparison', {
+  .add(`comparison (${comparisonRef.ref})`, {
     defer: true,
     fn: function (deferred) {
       run(events, chunked, comparison_)
