@@ -8,11 +8,11 @@ const proxyquire = require('proxyquire').noPreserveCache().noCallThru()
 const events = require('./fixtures/events').map(validateAndParseEvent)
 const chunked = _.partition(events, function (el, index) { return index % 2 })
 
-const master = proxyquire('./src/stats', {
-  underscore: require('underscore-master')
+const baseline_ = proxyquire('./src/stats', {
+  underscore: require('./vendor/underscore-baseline')
 })
-const functionalStyle = proxyquire('./src/stats', {
-  underscore: require('underscore-functional')
+const comparison_ = proxyquire('./src/stats', {
+  underscore: require('./vendor/underscore-comparison')
 })
 
 const run = require('./benchmark')
@@ -20,10 +20,10 @@ const run = require('./benchmark')
 const suite = new benchmark.Suite()
 
 suite
-  .add('master (c9b4b63fd08847281260205b995ae644f6f2f4d2)', {
+  .add('baseline', {
     defer: true,
     fn: function (deferred) {
-      run(events, chunked, master)
+      run(events, chunked, baseline_)
         .then(function () {
           deferred.resolve()
         }, function (err) {
@@ -32,10 +32,10 @@ suite
         })
     }
   })
-  .add('functional style (eaba5b58fa8fd788a5be1cf3b66e81f8293f70f9)', {
+  .add('comparison', {
     defer: true,
     fn: function (deferred) {
-      run(events, chunked, functionalStyle)
+      run(events, chunked, comparison_)
         .then(function () {
           deferred.resolve()
         }, function (err) {
