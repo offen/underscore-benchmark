@@ -1,7 +1,7 @@
 # underscore-benchmark
 Benchmarking stats calculation from [offen/offen](https://github.com/offen/offen) against different underscore versions.
 
-## Basic setup
+## Default setup
 
 To run the benchmark from this repository, you first need to install the project's dependencies. Next, you can run the setup which does the following:
 - pull the underscore versions to compare and put them in the `vendor` directory
@@ -44,7 +44,7 @@ Such an argument can be any valid git ref for the repository.
 By default, the benchmark runs against randomly created user data for __5000 users__. This is an average real-world workload for the code under test, so it's probably a sane default. If you want to benchmark how two versions of underscore compare with more or less data being processed, you can re-run the fixture creation, passing the non-default number of users as the first argument:
 
 ```
-./generate-fixtures.js 2500
+./generate-fixtures.js 2500 ./fixtures/events.json
 ```
 
 ### Reverting your adjustments
