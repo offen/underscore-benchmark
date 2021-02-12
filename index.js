@@ -1,24 +1,27 @@
 #!/usr/bin/env node
 
-const url = require('url')
-const _ = require('underscore')
-const benchmark = require('benchmark')
+var url = require('url')
+var _ = require('underscore')
+var benchmark = require('benchmark')
 // Making Benchmark globally available is needed when running in the browsers
 global.Benchmark = benchmark
 
-const events = require('./fixtures/events').map(validateAndParseEvent)
-const baselineRef = require('./vendor/underscore-baseline.ref')
-const baseline_ = require('./vendor/underscore-baseline')
-const comparisonRef = require('./vendor/underscore-comparison.ref')
-const comparison_ = require('./vendor/underscore-comparison')
-const stats = require('./src/stats')
-const run = require('./benchmark')
+var events = _.map(require('./fixtures/events'), validateAndParseEvent)
+var baselineRef = require('./vendor/underscore-baseline.ref')
+var baseline_ = require('./vendor/underscore-baseline')
+var comparisonRef = require('./vendor/underscore-comparison.ref')
+var comparison_ = require('./vendor/underscore-comparison')
+var stats = require('./src/stats')
+var run = require('./benchmark')
+
+require('es6-promise').polyfill()
+require('url-polyfill')
 
 // N.B.: this usage of underscore is not relevant to the benchmark, so
 // we just consume the version from npm.
-const chunked = _.partition(events, function (el, index) { return index % 2 })
+var chunked = _.partition(events, function (el, index) { return index % 2 })
 
-const suite = new benchmark.Suite()
+var suite = new benchmark.Suite()
 
 suite
   .add(`baseline (${baselineRef.ref})`, {
@@ -57,7 +60,7 @@ suite
   .run()
 
 function validateAndParseEvent (event) {
-  ;['href', 'rawHref', 'referrer'].forEach(function (key) {
+  _.each(['href', 'rawHref', 'referrer'], function (key) {
     event.payload[key] = event.payload[key] && normalizeURL(event.payload[key])
   })
   return event
