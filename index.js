@@ -21,6 +21,10 @@ require('url-polyfill')
 // we just consume the version from npm.
 var chunked = _.partition(events, function (el, index) { return index % 2 })
 
+// Browser detection and support
+var isBrowser = typeof window != 'undefined';
+var consoleMessages = [];
+
 var suite = new benchmark.Suite()
 
 suite
@@ -49,13 +53,21 @@ suite
     }
   })
   .on('start', function () {
-    console.log(`Now running bechmark with "baseline (${baselineRef.ref})" and "comparison (${comparisonRef.ref})"`)
+    var message = `Now running bechmark with "baseline (${baselineRef.ref})" and "comparison (${comparisonRef.ref})"`;
+    isBrowser ? document.write(message) : console.log(message);
   })
   .on('cycle', function (event) {
-    console.log(String(event.target))
+    var message = String(event.target);
+    isBrowser ? consoleMessages.push(message) : console.log(message);
   })
   .on('complete', function () {
-    console.log('Fastest is ' + this.filter('fastest').map('name'))
+    var message = 'Fastest is ' + this.filter('fastest').map('name');
+    if (isBrowser) {
+      consoleMessages.push(message);
+      document.write(consoleMessages.join('<br>'));
+    } else {
+      console.log(message);
+    }
   })
   .run()
 
