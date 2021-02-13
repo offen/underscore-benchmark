@@ -45,7 +45,7 @@ The script expects two arguments, the __baseline__ ref and the __comparison__ re
 node ./pull-versions.js master some-feature-branch
 ```
 
-Such an argument can be any valid git ref for the repository.
+Such an argument can be any either a branchname or a commit hash for the repository.
 
 [underscore-repo]: https://github.com/jashkenas/underscore
 
