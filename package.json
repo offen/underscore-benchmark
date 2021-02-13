@@ -8,11 +8,11 @@
     "comparison_ref": "eaba5b58fa8fd788a5be1cf3b66e81f8293f70f9"
   },
   "scripts": {
-    "generate-fixtures": "./generate-fixtures.js 5000 ./fixtures/events.json",
-    "pull-versions": "./pull.sh $npm_package_config_baseline_ref $npm_package_config_comparison_ref",
+    "generate-fixtures": "node ./generate-fixtures.js 5000 ./fixtures/events.json",
+    "pull-versions": "node ./pull-versions.js $npm_package_config_baseline_ref $npm_package_config_comparison_ref",
     "setup": "npm run pull-versions && npm run generate-fixtures",
     "postsetup": "echo 'You can now use `npm t` to run the benchmark.'",
-    "test": "./index.js",
+    "test": "node ./index.js",
     "start": "budo ./index.js"
   },
   "repository": {
@@ -30,6 +30,8 @@
     "budo": "^11.6.4",
     "es6-promise": "^4.2.8",
     "microtime": "^3.0.0",
+    "nodegit": "^0.27.0",
+    "rimraf": "^3.0.2",
     "ulid": "^2.3.0",
     "underscore": "^1.12.0",
     "url-polyfill": "^1.1.12",
