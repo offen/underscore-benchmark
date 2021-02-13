@@ -17,48 +17,76 @@ var run = require('./benchmark')
 require('es6-promise').polyfill()
 require('url-polyfill')
 
+var isBrowser = typeof window !== 'undefined'
+
+// Testers can limit the execution of tests to a single case by:
+// 1. using the CLI pass either `baseline` or `comparison` as a command
+//    line arg, (e.g. `node ./index.js baseline`)
+// 2. using the browser append either `baseline` or `comparison` to the URL's
+//    hash (e.g. http://localhost:9966/#baseline)
+var runOnly = isBrowser
+  ? window.location.hash.replace(/^#/, '')
+  : process.argv[2]
+
 // N.B.: this usage of underscore is not relevant to the benchmark, so
 // we just consume the version from npm.
 var chunked = _.partition(events, function (el, index) { return index % 2 })
-var logger = new Logger(typeof window !== 'undefined')
+var logger = new Logger(isBrowser)
 
 var suite = new benchmark.Suite()
+var tests = []
+
+if (!runOnly || runOnly === 'baseline') {
+  tests.push({
+    display: `baseline (${baselineRef.ref})`,
+    _: baseline_
+  })
+}
+
+if (!runOnly || runOnly === 'comparison') {
+  tests.push({
+    display: `comparison (${comparisonRef.ref})`,
+    _: comparison_
+  })
+}
+
+if (!tests.length) {
+  logger.log('No tests to run, did you pass an unknown test name?').flush()
+  if (isBrowser) {
+    throw new Error('No tests to run, cannot continue.')
+  }
+  process.exit(1)
+}
+
+_.each(tests, function (test) {
+  suite.add(test.display, {
+    defer: true,
+    fn: function (deferred) {
+      run(events, chunked, stats(test._))
+        .then(function () {
+          deferred.resolve()
+        }, function (err) {
+          console.error(err)
+          deferred.resolve(err)
+        })
+    }
+  })
+})
 
 suite
-  .add(`baseline (${baselineRef.ref})`, {
-    defer: true,
-    fn: function (deferred) {
-      run(events, chunked, stats(baseline_))
-        .then(function () {
-          deferred.resolve()
-        }, function (err) {
-          console.error(err)
-          deferred.resolve(err)
-        })
-    }
-  })
-  .add(`comparison (${comparisonRef.ref})`, {
-    defer: true,
-    fn: function (deferred) {
-      run(events, chunked, stats(comparison_))
-        .then(function () {
-          deferred.resolve()
-        }, function (err) {
-          console.error(err)
-          deferred.resolve(err)
-        })
-    }
-  })
   .on('start', function () {
     logger.log(
-      `Now running bechmark with "baseline (${baselineRef.ref})" and "comparison (${comparisonRef.ref})"`
+      `Now running bechmark with ${_.pluck(tests, 'display').join(' and ')}`
     ).flush()
   })
   .on('cycle', function (event) {
     logger.log(String(event.target))
   })
   .on('complete', function () {
-    logger.log('Fastest is ' + this.filter('fastest').map('name')).flush()
+    if (!runOnly) {
+      logger.log('Fastest is ' + this.filter('fastest').map('name'))
+    }
+    logger.flush()
   })
   .run()
 
