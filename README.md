@@ -35,6 +35,18 @@ If used with defaults, the benchmark will use commit [c9b4b63fd08847281260205b99
 
 ## Adjusting the benchmark
 
+### Running against a single version only
+
+If you do not want to run the benchmark against both the __baseline__ and the __comparison__ version at the same time, you can choose to run a single test only.
+
+Using the CLI, this is done by passing the desired test as the first command line arg:
+
+```
+npm t -- baseline
+```
+
+If you are using the browser, append the name of the desired case as the URL hash and reload the page, e.g. <http://localhost:9966/#baseline>
+
 ### Running against different versions of underscore
 
 If you want to run this benchmark against different versions of underscore, you can use the `./pull.sh` script to pull any versions you want to compare from the [jashkenas/underscore][underscore-repo] repository.
