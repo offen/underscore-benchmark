@@ -28,7 +28,7 @@ const comparisonRef = process.argv[3]
     }
     const bundle = await commit.getEntry('underscore.js')
     await writeFile(
-      `./vendor/underscore-${name}.js`, await bundle.getBlob()
+      `./vendor/underscore-${name}.js`, String(await bundle.getBlob())
     )
     await writeFile(
       `./vendor/underscore-${name}.ref.json`, JSON.stringify({ ref })

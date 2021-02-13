@@ -1,0 +1,21 @@
+name: Run benchmark
+
+on: push
+
+jobs:
+  benchmark:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+     - uses: actions/checkout@v2
+     - uses: actions/setup-node@v2
+       with:
+         node-version: '14'
+     - name: Install dependencies
+       run: npm i
+     - name: Run setup
+       run: npm run setup
+     - name: Run benchmark
+       run: npm t
