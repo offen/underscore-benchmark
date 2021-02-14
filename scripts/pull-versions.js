@@ -2,6 +2,7 @@
 
 const util = require('util')
 const fs = require('fs')
+const path = require('path')
 const rimraf = util.promisify(require('rimraf'))
 const Git = require('nodegit')
 
@@ -16,7 +17,7 @@ const comparisonRef = process.argv[3]
   }
 
   await rimraf('./underscore')
-  const repo = await Git.Clone('git://github.com/jashkenas/underscore.git', './underscore')
+  const repo = await Git.Clone('git://github.com/jashkenas/underscore.git', path.resolve(__dirname, './../underscore'))
 
   const checkouts = [{ name: 'baseline', ref: baselineRef }, { name: 'comparison', ref: comparisonRef }]
   for (const { name, ref } of checkouts) {
@@ -28,10 +29,10 @@ const comparisonRef = process.argv[3]
     }
     const bundle = await commit.getEntry('underscore.js')
     await writeFile(
-      `./vendor/underscore-${name}.js`, String(await bundle.getBlob())
+      path.resolve(__dirname, `./../vendor/underscore-${name}.js`), String(await bundle.getBlob())
     )
     await writeFile(
-      `./vendor/underscore-${name}.ref.json`, JSON.stringify({ ref })
+      path.resolve(__dirname, `./../vendor/underscore-${name}.ref.json`), JSON.stringify({ ref })
     )
   }
 })()
