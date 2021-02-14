@@ -54,7 +54,7 @@ If you want to run this benchmark against different versions of underscore, you 
 The script expects two arguments, the __baseline__ ref and the __comparison__ ref:
 
 ```
-node ./pull-versions.js master some-feature-branch
+node ./scripts/pull-versions.js master some-feature-branch
 ```
 
 Such an argument can be any either a branchname or a commit hash for the repository.
@@ -66,7 +66,7 @@ Such an argument can be any either a branchname or a commit hash for the reposit
 By default, the benchmark runs against randomly created user data for __5000 users__. This is an average real-world workload for the code under test, so it's probably a sane default. If you want to benchmark how two versions of underscore compare with more or less data being processed, you can re-run the fixture creation, passing the non-default number of users as the first argument:
 
 ```
-node ./generate-fixtures.js 2500 ./fixtures/events.json
+node ./scripts/generate-fixtures.js 2500 ./fixtures/events.json
 ```
 
 ### Reverting your adjustments

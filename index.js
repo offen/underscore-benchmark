@@ -12,10 +12,14 @@ var baseline_ = require('./vendor/underscore-baseline')
 var comparisonRef = require('./vendor/underscore-comparison.ref')
 var comparison_ = require('./vendor/underscore-comparison')
 var stats = require('./src/stats')
-var run = require('./benchmark')
+var runBenchmarkWith = require('./run-benchmark')
 
 require('es6-promise').polyfill()
 require('url-polyfill')
+
+// N.B.: this usage of underscore is not relevant to the benchmark, so
+// we just consume the version from npm.
+var chunkedEvents = _.partition(events, function (el, index) { return index % 2 })
 
 var isBrowser = typeof window !== 'undefined'
 
@@ -28,9 +32,6 @@ var runOnly = isBrowser
   ? window.location.hash.replace(/^#/, '')
   : process.argv[2]
 
-// N.B.: this usage of underscore is not relevant to the benchmark, so
-// we just consume the version from npm.
-var chunked = _.partition(events, function (el, index) { return index % 2 })
 var logger = new Logger(isBrowser)
 
 var suite = new benchmark.Suite()
@@ -62,7 +63,7 @@ _.each(tests, function (test) {
   suite.add(test.display, {
     defer: true,
     fn: function (deferred) {
-      run(events, chunked, stats(test._))
+      runBenchmarkWith(events, chunkedEvents, stats(test._))
         .then(function () {
           deferred.resolve()
         }, function (err) {
