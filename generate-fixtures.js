@@ -52,24 +52,40 @@ fs.writeFile(outfile, JSON.stringify(events, null, 2), function (err) {
 
 function newFakeSession (length) {
   const sessionId = uuid.v4()
-  const isMobileSession = Math.random() > 0.66
+  const isMobileSession = sometimes(33)
   const timestamp = Date.now() - randomInRange(0, 600000)
-  return Array.from({ length }).map(function () {
-    return {
+  const sessionReferrer = sometimes(25)
+    ? randomReferrer()
+    : ''
+  let previousHref
+  return Array.from({ length }).map(function (el, index) {
+    const href = randomPage()
+    const result = {
       type: 'PAGEVIEW',
-      href: randomPage(),
+      href: href,
       title: 'Page Title',
-      referrer: Math.random() > 0.75 ? randomReferrer() : '',
+      referrer: index === 0
+        ? sessionReferrer
+        : previousHref,
       pageload: randomInRange(400, 1200),
       isMobile: isMobileSession,
       timestamp: new Date(timestamp + randomInRange(0, 1000)),
       sessionId: sessionId
     }
+    previousHref = href
+    return result
   })
 }
 
 function randomInRange (lower, upper) {
+  if (crypto.randomInt) {
+    return crypto.randomInt(lower, upper + 1)
+  }
   return _.sample(_.range(lower, upper + 1))
+}
+
+function sometimes (percentage) {
+  return randomInRange(1, 100) <= percentage
 }
 
 function randomPage () {
